@@ -1,6 +1,6 @@
 # Value Investing Stock Dashboard
 ## A Python -> SQL Server -> PowerBI ETL Pipeline based off of Yfinance API data that visualizes key value-based investing metrics
-![Value Investing Stock Dashboard Example](https://pasteboard.co/LoRySgLt6TCd.png)
+![Dashboard](./Images/FinancialAnalysisDashboardScreenshot.jpg)
 
 ## This dashboard includes
 * A Detailed Stock Chart
@@ -23,7 +23,7 @@
 
 ## The Pipeline Flow
 
-![Value Investing Stock Dashboard Pipeline](https://pasteboard.co/R2NfijSwjvIH.jpg)
+![Dashboard](./Images/Pipeline.jpg)
 
 Stock ticker is inputted in `stockanalysisdashboard.py` terminal, data extracted from yfinance and partly Gemini AI(sector average P/E and PEG ratio), then transformed, and loaded into star structured SQL Server database. SQL Server data is then connected to PowerBI through DirectQuery and outputted into clean and precise visuals.
 
@@ -38,7 +38,7 @@ The user inputs a public company's stock ticker, upon that, a connection is esta
 
 ## 2. Star SQL Schema for seamless PowerBI Integration
 
-![Star Schema](https://pasteboard.co/UpCPUBnzLFKd.png)
+![Dashboard](./Images/Pipeline.jpg)
 ### The schema consists of five tables
 * `dim_company` - Description of the company
 * `dim_date` - The timeframe of the database (Derived from date range of historical stock prices)
@@ -49,5 +49,4 @@ The user inputs a public company's stock ticker, upon that, a connection is esta
 ## 3. PowerBI and Figma Visuals
 The SQL Server database is connected to PowerBI through DirectQuery, and finally outputs the data within the dashboard. The background of the dashboard was created in Figma, and the 4 value metrics in the top right were calculated by using DAX and outputting them to KPI cards. There is an interactive chart timeframe slider that shows historical stock prices and volume, in addition to key company information.
 
-![Value Investing Stock Dashboard Example](https://pasteboard.co/LoRySgLt6TCd.png)
-
+![Dashboard](./Images/FinancialAnalysisDashboardScreenshot.jpg)
