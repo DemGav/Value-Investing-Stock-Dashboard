@@ -38,7 +38,7 @@ The user inputs a public company's stock ticker, upon that, a connection is esta
 
 ## 2. Star SQL Schema for seamless PowerBI Integration
 
-![Dashboard](./Images/Pipeline.jpg)
+![Dashboard](./Images/schema.jpg)
 ### The schema consists of five tables
 * `dim_company` - Description of the company
 * `dim_date` - The timeframe of the database (Derived from date range of historical stock prices)
