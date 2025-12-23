@@ -36,10 +36,9 @@ Stock ticker is inputted in `stockanalysisdashboard.py` terminal, data extracted
 The user inputs a public company's stock ticker, upon that, a connection is established to the server, and the database is cleared of any existing data from previous stock entries. The script's sections are divided by their entry into the SQL database. The main chunk of code consists of extracting data from yfinance, and transforming it to fit into the SQL database. Additionally, within the script, implementation of Gemini 2.0 for sector-average P/E and PEG ratios. Gemini 2.0 is also used for "Warren AI", which takes the input gathered from yfinance, analyzes it, and determines whether a stock is overvalued or not and gives reasoning.
 
 
-## 2. Star SQL Schema for seamless PowerBI Integration
+## 2. Star SQL Schema for Seamless PowerBI Integration
 
 ![Dashboard](./Images/Schema.jpg)
-
 ### The schema consists of five tables
 * `dim_company` - Description of the company
 * `dim_date` - The timeframe of the database (Derived from date range of historical stock prices)
