@@ -1,0 +1,99 @@
+/*
+=============================================================================
+Bogle-AI Stock Analytics: Database Initialization Script
+Description: Sets up the Star Schema for financial data analysis.
+Order: Drop Children -> Drop Parents -> Create Parents -> Create Children
+=============================================================================
+*/
+
+-- 1. DATABASE CREATION
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'FinancialAnalysisDB')
+BEGIN
+    CREATE DATABASE [FinancialAnalysisDB];
+END
+GO
+
+USE [FinancialAnalysisDB];
+GO
+
+-- 2. CLEANUP (Allows the script to be re-run)
+IF OBJECT_ID('dbo.fact_valuation_snapshot', 'U') IS NOT NULL DROP TABLE dbo.fact_valuation_snapshot;
+IF OBJECT_ID('dbo.fact_financials', 'U') IS NOT NULL DROP TABLE dbo.fact_financials;
+IF OBJECT_ID('dbo.fact_prices', 'U') IS NOT NULL DROP TABLE dbo.fact_prices;
+IF OBJECT_ID('dbo.dim_company', 'U') IS NOT NULL DROP TABLE dbo.dim_company;
+IF OBJECT_ID('dbo.dim_date', 'U') IS NOT NULL DROP TABLE dbo.dim_date;
+GO
+
+-- 3. DIMENSION TABLES (Parent Tables)
+
+
+CREATE TABLE [dbo].[dim_company](
+    [ticker] [varchar](10) NOT NULL PRIMARY KEY,
+    [company_name] [varchar](255) NULL,
+    [sector] [varchar](100) NULL,
+    [industry] [varchar](100) NULL,
+    [description] [varchar](max) NULL,
+    [ceo_name] [varchar](100) NULL,
+    [hq_location] [varchar](100) NULL,
+    [employee_count] [int] NULL
+);
+GO
+
+CREATE TABLE [dbo].[dim_date](
+    [date] [date] NOT NULL PRIMARY KEY,
+    [year] [int] NULL,
+    [quarter] [char](2) NULL,
+    [month] [int] NULL,
+    [month_name] [varchar](15) NULL
+);
+GO
+
+-- 4. FACT TABLES (Child Tables)
+
+CREATE TABLE [dbo].[fact_prices](
+    [ticker] [varchar](10) NOT NULL,
+    [date] [date] NOT NULL,
+    [open_price] [decimal](10, 2) NULL,
+    [close_price] [decimal](10, 2) NULL,
+    [volume] [bigint] NULL,
+    [lowest_price] [decimal](10, 2) NULL,
+    [highest_price] [decimal](10, 2) NULL,
+    CONSTRAINT [pk_fact_prices] PRIMARY KEY CLUSTERED ([ticker] ASC, [date] ASC),
+    CONSTRAINT [fk_prices_company] FOREIGN KEY([ticker]) REFERENCES [dbo].[dim_company] ([ticker]),
+    CONSTRAINT [fk_prices_date] FOREIGN KEY([date]) REFERENCES [dbo].[dim_date] ([date])
+);
+GO
+
+CREATE TABLE [dbo].[fact_financials](
+    [ticker] [varchar](10) NOT NULL,
+    [fiscal_quarter] [char](6) NOT NULL,
+    [fiscal_date] [date] NOT NULL,
+    [revenue] [decimal](18, 2) NULL,
+    [net_income] [decimal](18, 2) NULL,
+    [eps] [decimal](10, 2) NULL,
+    [ebitda] [decimal](18, 2) NULL,
+    [free_cashflow] [decimal](18, 2) NULL,
+    [total_liabilities] [decimal](18, 2) NULL,
+    [total_equity] [decimal](18, 2) NULL,
+    CONSTRAINT [pk_fact_financials] PRIMARY KEY CLUSTERED ([ticker] ASC, [fiscal_quarter] ASC),
+    CONSTRAINT [fk_fin_company] FOREIGN KEY([ticker]) REFERENCES [dbo].[dim_company] ([ticker])
+);
+GO
+
+CREATE TABLE [dbo].[fact_valuation_snapshot](
+    [ticker] [varchar](10) NOT NULL,
+    [date] [date] NOT NULL,
+    [market_cap] [bigint] NULL,
+    [pe_ratio] [decimal](18, 4) NULL,
+    [enterprise_value] [decimal](18, 2) NULL,
+    [dividend_yield] [float] NULL,
+    [sector_pe_ratio] [decimal](10, 2) NULL,
+    [peg_ratio] [decimal](10, 2) NULL,
+    [buffet_score] [int] NULL,
+    [ai_reasoning] [varchar](max) NULL,
+    [risk_factor] [varchar](500) NULL,
+    CONSTRAINT [pk_fact_valuation_snapshot] PRIMARY KEY CLUSTERED ([ticker] ASC, [date] ASC),
+    CONSTRAINT [fk_val_company] FOREIGN KEY([ticker]) REFERENCES [dbo].[dim_company] ([ticker]),
+    CONSTRAINT [fk_val_date] FOREIGN KEY([date]) REFERENCES [dbo].[dim_date] ([date])
+);
+GO

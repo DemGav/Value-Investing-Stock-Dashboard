@@ -1,0 +1,6 @@
+pandas
+yfinance
+sqlalchemy
+google-genai
+pyodbc
+python-dotenv
